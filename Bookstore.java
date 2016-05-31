@@ -34,7 +34,7 @@ public class Bookstore {
 			
 			}
 		else {
-			prln("This book is not in our store.");
+			prln("We don't have that book.");
 			
 			}
 		
