@@ -1,0 +1,137 @@
+/* Notepad.java */
+
+package notepad;
+
+
+import java.awt.*;
+import java.awt.event.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+
+
+public class Notepad extends Frame implements ActionListener{
+
+    Panel southpanel=new Panel();
+    TextArea area=new TextArea();
+    
+    
+    MenuBar mb=new MenuBar();
+    Menu filemenu=new Menu("File");
+    Menu editmenu=new Menu("Edit");
+    
+    MenuItem open=new MenuItem("Open",new MenuShortcut(KeyEvent.VK_N));
+    MenuItem saveas=new MenuItem("Save As", new MenuShortcut(KeyEvent.VK_S));
+    
+    Notepad(){
+        
+        setBounds(100,100,600,600);
+        setMenuBar(mb);
+        mb.add(filemenu);
+        mb.add(editmenu);
+        
+        filemenu.add(open);
+        filemenu.add(saveas);
+        
+        open.addActionListener(this);
+        saveas.addActionListener(this);
+        
+        add(southpanel,BorderLayout.SOUTH);
+        add(area);
+        
+        southpanel.setLayout(new FlowLayout(FlowLayout.RIGHT));
+        southpanel.add(new Label("Line:  Col:  "));
+        
+    }
+    
+    
+    
+    public void actionPerformed(ActionEvent ae) {
+        
+        if(ae.getSource().equals(open)){
+            
+            FileDialog opendialog=new FileDialog(this,"Please select a file to open",FileDialog.LOAD);
+            
+            String filename=opendialog.getFile();
+            String directoryname=opendialog.getDirectory();
+            
+            String total="";
+            
+            try{
+                BufferedReader br=new BufferedReader(new FileReader(directoryname+filename));
+                String line="";
+                
+                while(true){
+                    
+                    line=br.readLine();
+                    if(line!=null){
+                        total+=line;
+                        total+="\r\n";
+                        
+                    }
+                    else{
+                        break;
+                    }
+                }
+            }
+            
+            catch(Exception e){
+                
+                System.out.println(e.getMessage());
+                return;
+            }
+            
+            area.setText(total);
+       
+        
+        }
+        
+        else if(ae.getSource().equals(saveas)){
+            //Save as handler
+            
+            System.out.println("Save as clicked.");
+            
+            FileDialog saveDialog=new FileDialog(this,"please select file to open", FileDialog.SAVE);
+            saveDialog.show();
+            
+            String filename=saveDialog.getFile();
+            String directoryname=saveDialog.getDirectory();
+            
+            try{
+                
+                FileWriter fw=new FileWriter(directoryname+filename);
+                fw.write(area.getText());
+                fw.close();
+            }
+            catch(Exception e){
+                
+                System.out.println(e.getMessage());
+                
+            }
+            
+            
+        }
+        
+    }
+        
+  }  
+  
+  /* Mainclass.java */
+  
+  package notepad;
+
+
+public class Mainclass {
+    public static void main(String[] args){
+        
+        Notepad n1=new Notepad();
+        n1.setVisible(true);
+    }
+    
+}
+
+    
+
+    
